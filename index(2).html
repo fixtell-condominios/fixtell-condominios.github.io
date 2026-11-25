@@ -1,0 +1,712 @@
+<!doctype html><html lang="pt-BR"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Fixtell Condomínios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: sidebar escura fixa + área principal com blocos por tipo; dentro de cada bloco, uma linha por letra com cards compactos ao lado. */
+:root{
+  --bg:#f3f2f0; --surface:#ffffff; --surface-2:#f8f7f5; --line:#e7e4df; --line-strong:#d6d2cb;
+  --fg:#1d1b19; --muted:#78726b; --faint:#a8a199;
+  --side:#1f1d1b; --side-fg:#ece8e3; --side-muted:#9d958b; --side-line:#34312e; --side-hover:#2b2926;
+  --accent:#e2530a; --accent-2:#c84706; --accent-soft:#fff0e6; --accent-fg:#ffffff;
+  --ok-bg:#dcf3e4; --ok-line:#98d2ac; --ok-fg:#1c7440;
+  --warn-bg:#fdeceb; --warn-line:#f4b9b4; --warn-fg:#b3261e;
+  --amber-bg:#fff4d6; --amber-fg:#8a5a00; --amber-line:#f1d48a;
+  --neutral-bg:#efede9; --neutral-fg:#625c55;
+  --cbl:94%; --cfl:32%; --cll:52%;
+  --shadow:0 1px 2px rgba(30,20,10,.06),0 6px 20px rgba(30,20,10,.06);
+  --font:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+}
+:root[data-theme="dark"]{
+  --bg:#131211; --surface:#1d1b19; --surface-2:#252220; --line:#322f2b; --line-strong:#47433e;
+  --fg:#f2eee9; --muted:#a39b91; --faint:#6f685f;
+  --side:#0e0d0c; --side-fg:#ece8e3; --side-muted:#9d958b; --side-line:#262320; --side-hover:#1c1a18;
+  --accent:#f26a21; --accent-2:#d9560f; --accent-soft:#33200f; --neutral-bg:#2a2724; --neutral-fg:#b9b1a7;
+  --ok-bg:#16301f; --ok-line:#2c6b43; --ok-fg:#7fd6a0;
+  --warn-bg:#35191a; --warn-line:#7a2d2a; --warn-fg:#ff9b94;
+  --amber-bg:#352a0e; --amber-fg:#f0c25a; --amber-line:#6b5420;
+  --cbl:20%; --cfl:76%; --cll:58%;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35); color-scheme:dark;
+}
+:root[data-theme="midnight"]{
+  --bg:#0b1220; --surface:#111a2e; --surface-2:#162240; --line:#1f2c4a; --line-strong:#2f4170;
+  --fg:#e8eefc; --muted:#93a3c7; --faint:#5f7099;
+  --side:#070c18; --side-fg:#e1e8fa; --side-muted:#8193ba; --side-line:#172038; --side-hover:#101a30;
+  --accent:#4d8dff; --accent-2:#2f6fe6; --accent-soft:#14254a; --neutral-bg:#1a2542; --neutral-fg:#a9b8dc;
+  --ok-bg:#16301f; --ok-line:#2c6b43; --ok-fg:#7fd6a0;
+  --warn-bg:#35191a; --warn-line:#7a2d2a; --warn-fg:#ff9b94;
+  --amber-bg:#352a0e; --amber-fg:#f0c25a; --amber-line:#6b5420;
+  --cbl:20%; --cfl:76%; --cll:58%;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35); color-scheme:dark;
+}
+:root[data-theme="ocean"]{
+  --bg:#eef5f9; --surface:#ffffff; --surface-2:#f4f9fc; --line:#dbe7ef; --line-strong:#c3d4e0;
+  --fg:#10242f; --muted:#5c7685; --faint:#93a9b6;
+  --side:#0f2a3a; --side-fg:#e3f1f8; --side-muted:#8fb1c4; --side-line:#1d4258; --side-hover:#17384d;
+  --accent:#0a7fb8; --accent-2:#07689a; --accent-soft:#e0f3fb; --neutral-bg:#e8f0f5; --neutral-fg:#4f6a79;
+}
+:root[data-theme="forest"]{
+  --bg:#f1f4ee; --surface:#ffffff; --surface-2:#f6f8f3; --line:#dfe6d8; --line-strong:#c9d3c0;
+  --fg:#1b241a; --muted:#66745f; --faint:#9aa793;
+  --side:#1a2a1c; --side-fg:#e6efe3; --side-muted:#9cb29a; --side-line:#2c4230; --side-hover:#23382a;
+  --accent:#2f8f4e; --accent-2:#247340; --accent-soft:#e2f4e7; --neutral-bg:#ebefe6; --neutral-fg:#5a6855;
+}
+:root[data-theme="violet"]{
+  --bg:#f5f2fb; --surface:#ffffff; --surface-2:#faf8fe; --line:#e6e0f2; --line-strong:#d2c9e6;
+  --fg:#1f1a2e; --muted:#74698f; --faint:#a59db9;
+  --side:#231a36; --side-fg:#eee9f8; --side-muted:#a99ec4; --side-line:#3a2d57; --side-hover:#2e2247;
+  --accent:#7c3aed; --accent-2:#6527d1; --accent-soft:#f0e8fe; --neutral-bg:#efebf7; --neutral-fg:#665b82;
+}
+
+/* aparência / mapa */
+.themes{display:flex;flex-wrap:wrap;gap:8px;padding:4px 8px 2px;align-items:center}
+.sw{width:28px;height:28px;border-radius:50%;border:2px solid var(--side-line);padding:0;position:relative;overflow:hidden;background:none}
+.sw i{position:absolute;inset:0}
+.sw:hover{border-color:var(--side-muted)}
+.sw.on{border-color:var(--side-fg);box-shadow:0 0 0 2px var(--accent)}
+.themename{flex-basis:100%;font-size:11px;color:var(--side-muted);margin-top:2px}
+.maplink{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--accent);text-decoration:none;padding:3px 9px;border-radius:99px;background:var(--accent-soft);border:1px solid transparent;width:fit-content;max-width:100%}
+.maplink:hover{border-color:var(--accent)}
+.maplink .ic{width:12px;height:12px}
+.maplink.add{background:none;border:1px dashed var(--line-strong);color:var(--muted)}
+.maplink.add:hover{color:var(--accent);border-color:var(--accent)}
+.selo.shaft{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+.hint{font-size:11px;color:var(--faint);line-height:1.35}
+.ro [data-act="add"],.ro [data-act="edit"],.ro [data-act="addmap"],.ro [data-act="reset"],.ro [data-act="imp"]{display:none!important}
+.ro [data-act="conf"]{pointer-events:none}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:13px;line-height:1.4;margin:0;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.ic{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+.app{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:100vh}
+.side{background:var(--side);color:var(--side-fg);position:sticky;top:0;height:100vh;overflow-y:auto;padding:16px 12px;display:flex;flex-direction:column;gap:6px}
+.brand{display:flex;align-items:center;gap:10px;padding:2px 6px 14px}
+.logo{width:34px;height:34px;border-radius:9px;background:var(--accent);color:#fff;font-weight:700;font-size:18px;display:grid;place-items:center}
+.brand b{display:block;font-size:16px;font-weight:700;line-height:1.1}
+.brand small{display:block;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--side-muted);margin-top:3px}
+.side h2{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--side-muted);font-weight:600;margin:14px 8px 4px}
+.nav{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:0;color:var(--side-fg);padding:9px 10px;border-radius:9px;font-size:13.5px;font-weight:500}
+.nav:hover{background:var(--side-hover)}
+.nav.on{background:linear-gradient(180deg,var(--accent),var(--accent-2));color:#fff;box-shadow:0 2px 8px rgba(226,83,10,.35)}
+.nav .n{margin-left:auto;font-size:11px;font-weight:700;background:rgba(255,255,255,.16);border-radius:99px;padding:1px 8px;min-width:24px;text-align:center}
+.nav:not(.on) .n{background:var(--side-line);color:var(--side-fg)}
+.nav.warnbadge:not(.on) .n{background:var(--accent);color:#fff}
+.side .grow{flex:1}
+.sidefoot{border-top:1px solid var(--side-line);padding:12px 8px 2px;font-size:11.5px;color:var(--side-muted);line-height:1.5}
+
+.mobbar{display:none}
+.main{padding-block:20px 60px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));min-width:0;max-width:1500px}
+.top{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.top h1{font-size:20px;margin:0 8px 0 0;font-weight:700;letter-spacing:-.01em}
+.search{position:relative;flex:1 1 260px;max-width:460px}
+.search .ic{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted)}
+.search input{width:100%;padding:9px 12px 9px 34px;border-radius:10px;border:1px solid var(--line-strong);background:var(--surface)}
+.btn{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line-strong);background:var(--surface);border-radius:10px;padding:8px 13px;font-weight:600;font-size:13px;white-space:nowrap}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+.btn.primary:hover{background:var(--accent-2)}
+.btn.danger{color:var(--warn-fg);border-color:var(--warn-line);background:var(--warn-bg)}
+.btn.sm{padding:5px 10px;font-size:12px;border-radius:8px}
+.sel{padding:8px 10px;border-radius:10px;border:1px solid var(--line-strong);background:var(--surface);font-weight:500}
+.spacer{flex:1}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+.stat span{display:block;font-size:11px;color:var(--muted);font-weight:500}
+.stat b{font-size:22px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.stat .bar{height:5px;border-radius:9px;background:var(--neutral-bg);margin-top:6px;overflow:hidden}
+.stat .bar i{display:block;height:100%;background:var(--ok-fg);border-radius:9px}
+
+.chips{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.fchip{border:1px solid var(--line-strong);background:var(--surface);border-radius:99px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--muted);display:inline-flex;gap:6px;align-items:center}
+.fchip em{font-style:normal;font-weight:500;opacity:.7;font-variant-numeric:tabular-nums}
+.fchip.on{background:var(--fg);border-color:var(--fg);color:var(--bg)}
+.fchip.clear{border-style:dashed}
+
+.sec{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);margin-bottom:18px;padding:14px 16px 6px}
+.sechead{display:flex;align-items:center;gap:10px;width:100%;background:none;border:0;padding:2px 0 10px;text-align:left}
+.sechead .ic.big{width:20px;height:20px;color:var(--accent)}
+.sechead h3{margin:0;font-size:17px;font-weight:700;letter-spacing:-.01em}
+.sechead small{color:var(--muted);font-size:12px}
+.sechead .chev{margin-left:auto;color:var(--muted);transition:transform .15s}
+.sec.closed .chev{transform:rotate(-90deg)}
+.sec.closed .secbody{display:none}
+.addteam{display:inline-flex;align-items:center;gap:7px;border:1px dashed var(--line-strong);background:var(--surface-2);border-radius:99px;padding:6px 14px;font-size:12.5px;font-weight:600;margin:4px 0 12px;color:var(--fg)}
+.addteam:hover{border-color:var(--accent);color:var(--accent)}
+.row{display:grid;grid-template-columns:150px minmax(0,1fr);gap:14px;padding:12px 0;border-top:1px solid var(--line)}
+.cell h4{margin:0;font-size:22px;font-weight:700;letter-spacing:-.02em;line-height:1}
+.cell .meta{display:flex;align-items:center;gap:8px;margin-top:8px;color:var(--muted);font-size:12px}
+.mini{width:24px;height:24px;border-radius:7px;border:1px solid var(--line-strong);background:var(--surface);display:grid;place-items:center;padding:0;color:var(--fg)}
+.mini:hover{border-color:var(--accent);color:var(--accent)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(196px,1fr));gap:10px;align-items:start}
+
+.card{--h:220;--s:80%;position:relative;background:var(--surface);border:1px solid hsl(var(--h) var(--s) var(--cll) / .45);border-left:3px solid hsl(var(--h) var(--s) var(--cll));border-radius:9px;padding:7px 9px 8px;display:flex;flex-direction:column;gap:5px;cursor:pointer;min-width:0}
+.card:hover{box-shadow:var(--shadow)}
+.card.done{background:var(--ok-bg);border-color:var(--ok-line);border-left-color:var(--ok-fg)}
+.chead{display:flex;align-items:center;gap:6px}
+.tchip{font-size:9.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:2px 7px;border-radius:5px;background:hsl(var(--h) var(--s) var(--cbl));color:hsl(var(--h) 70% var(--cfl));white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.card .go{margin-left:auto;border:0;background:none;padding:2px;color:var(--muted);display:grid;place-items:center;border-radius:6px}
+.card .go:hover{background:var(--neutral-bg)}
+.card.open .go .ic{transform:rotate(90deg)}
+.selos{display:flex;gap:4px;flex-wrap:wrap}
+.selo{display:inline-flex;align-items:center;gap:3px;font-size:9.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;border-radius:99px;padding:1px 7px;background:var(--neutral-bg);color:var(--neutral-fg);border:1px solid var(--line)}
+.selo .ic{width:10px;height:10px}
+.selo.warn{background:var(--warn-bg);color:var(--warn-fg);border-color:var(--warn-line)}
+.selo.tag{background:var(--amber-bg);color:var(--amber-fg);border-color:var(--amber-line)}
+.nome{font-size:13px;font-weight:700;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;letter-spacing:-.005em}
+.loc{display:flex;gap:5px;align-items:flex-start;color:var(--muted);font-size:11.5px;min-width:0}
+.loc .ic{width:13px;height:13px;margin-top:1px}
+.loc span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.loc.none span{font-style:italic;color:var(--faint)}
+.stline{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--muted);background:none;border:0;padding:0;text-align:left}
+.stline .ic{width:13px;height:13px}
+.stline.ok{color:var(--ok-fg)}
+.stline:hover{color:var(--accent)}
+.card.open .nome,.card.open .loc span{white-space:normal;overflow:visible}
+.xbody{display:none;border-top:1px dashed var(--line-strong);padding-top:7px;margin-top:2px;flex-direction:column;gap:7px}
+.card.open .xbody{display:flex}
+.xbody dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:3px 10px;font-size:11.5px}
+.xbody dt{color:var(--muted);font-weight:600}
+.xbody dd{margin:0;overflow-wrap:anywhere}
+.xbtns{display:flex;gap:6px}
+
+.empty{background:var(--surface);border:1px dashed var(--line-strong);border-radius:16px;padding:40px 20px;text-align:center;color:var(--muted)}
+.empty b{display:block;color:var(--fg);font-size:15px;margin-bottom:4px}
+
+.scrim{position:fixed;inset:0;background:rgba(10,8,6,.45);z-index:40}
+.drawer{position:fixed;top:0;bottom:0;right:0;width:min(460px,100%);background:var(--surface);z-index:41;box-shadow:-12px 0 40px rgba(0,0,0,.25);display:flex;flex-direction:column}
+.dhead{display:flex;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.dhead h2{margin:0;font-size:16px;flex:1}
+.dform{overflow-y:auto;padding:16px 18px;display:flex;flex-direction:column;gap:14px;flex:1}
+.fld{display:flex;flex-direction:column;gap:5px;min-width:0}
+.fld label,.lbl{font-size:11.5px;font-weight:600;color:var(--muted)}
+.fld input,.fld select,.fld textarea{padding:8px 10px;border-radius:9px;border:1px solid var(--line-strong);background:var(--surface-2);width:100%}
+.fld textarea{min-height:70px;resize:vertical}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.xrow{display:grid;grid-template-columns:1fr 1.3fr auto;gap:6px;margin-bottom:6px}
+.xrow input{padding:7px 9px;border-radius:8px;border:1px solid var(--line-strong);background:var(--surface-2);min-width:0}
+.chk{display:flex;gap:8px;align-items:center;font-weight:600;font-size:13px}
+.dfoot{display:flex;gap:8px;padding:12px 18px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);background:var(--surface)}
+.dfoot .spacer{flex:1}
+
+.modal{position:fixed;z-index:50;left:50%;top:50%;transform:translate(-50%,-50%);width:min(380px,calc(100% - 32px));background:var(--surface);border:1px solid var(--line-strong);border-radius:14px;padding:18px;box-shadow:var(--shadow)}
+.modal p{margin:0 0 14px}
+.modal .acts{display:flex;gap:8px;justify-content:flex-end}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:10px 14px;border-radius:10px;z-index:60;display:flex;gap:12px;align-items:center;font-weight:500;box-shadow:var(--shadow);max-width:calc(100% - 32px)}
+.toast button{background:none;border:0;color:var(--accent);font-weight:700;padding:0}
+
+@media (max-width:900px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;left:0;top:0;bottom:0;width:260px;z-index:45;transform:translateX(-102%);transition:transform .2s}
+  .side.show{transform:none}
+  .mobbar{display:flex;align-items:center;gap:10px;padding:10px 16px;background:var(--side);color:var(--side-fg);position:sticky;top:0;z-index:30}
+  .mobbar button{background:none;border:0;color:inherit;display:grid;place-items:center;padding:4px}
+  .row{grid-template-columns:minmax(0,1fr);gap:8px}
+  .cell{display:flex;align-items:center;gap:10px}
+  .cell .meta{margin-top:0}
+  .cell h4{font-size:18px}
+  .two{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+<script>(function(){try{var p=localStorage.getItem('fixtell-tema')||'auto';var t=p==='auto'?(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):p;document.documentElement.setAttribute('data-theme',t)}catch(e){}})()</script>
+
+<div class="mobbar"><button type="button" data-act="menu" aria-label="Abrir menu"></button><span class="logo" style="width:26px;height:26px;font-size:14px;border-radius:7px">F</span><b>Fixtell</b></div>
+<div class="app">
+  <aside class="side" id="side">
+    <div class="brand"><span class="logo">F</span><span><b>Fixtell</b><small>Condomínios e centers</small></span></div>
+    <h2>Cadastro</h2>
+    <div id="nav"></div>
+    <h2>Aparência</h2>
+    <div class="themes" id="themes"></div>
+    <h2>Dados</h2>
+    <button class="nav" type="button" data-act="exp-csv"><span data-ic="download"></span>Exportar CSV</button>
+    <button class="nav" type="button" data-act="exp-json"><span data-ic="download"></span>Backup (JSON)</button>
+    <button class="nav" type="button" data-act="imp"><span data-ic="upload"></span>Importar backup</button>
+    <button class="nav" type="button" data-act="reset"><span data-ic="rotate"></span>Restaurar planilha</button>
+    <input type="file" id="file" accept=".json,application/json" hidden>
+    <div class="grow"></div>
+    <div class="sidefoot" id="savenote">Alterações ficam salvas neste navegador. Use o backup para levar os dados para outro lugar.</div>
+  </aside>
+
+  <main class="main">
+    <div class="top">
+      <h1 id="title">Todos os registros</h1>
+      <div class="search"><span data-ic="search"></span><input id="q" type="search" placeholder="Buscar nome, localização, observação, campo…" aria-label="Buscar"></div>
+      <label class="sr" for="grp" style="position:absolute;left:-9999px">Agrupar por</label>
+      <select id="grp" class="sel"><option value="tipo">Agrupar por tipo</option><option value="origem">Agrupar por origem</option><option value="conf">Agrupar por conferência</option></select>
+      <span class="spacer"></span>
+      <button class="btn" type="button" data-act="qtheme" id="qtheme" title="Alternar claro/escuro" aria-label="Alternar claro/escuro"></button>
+      <button class="btn primary" type="button" data-act="add"><span data-ic="plus"></span>Novo registro</button>
+    </div>
+    <div class="stats" id="stats"></div>
+    <div class="chips" id="chips"></div>
+    <div id="list"></div>
+  </main>
+</div>
+
+<div id="overlay"></div>
+<datalist id="dl-tipos"></datalist>
+<datalist id="dl-keys"></datalist>
+
+<script>
+const SEED = [{"nome": "ATLANTIC VILLAGE", "origem": "cond", "tipo": "Casa", "local": "CTO na rua", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s0"}, {"nome": "ARAÇAGI PRAIA CLUBE", "origem": "cond", "tipo": "Casa", "local": "Cond tem proprio DIO, tecnico só ativa, a fibra já é passada", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s1"}, {"nome": "ANDORRA", "origem": "cond", "tipo": "Casa", "local": "Fica na caixa subterrânea na frente das casas 4 e 25", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s2"}, {"nome": "ITAPARICA", "origem": "cond", "tipo": "Casa", "local": "CTO nos postes do condomínio", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s3"}, {"nome": "BRUNA LIOTTO", "origem": "cond", "tipo": "Casa", "local": "CTO nos postes do condomínio", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s4"}, {"nome": "CONDOMINIO ALLIANCE RESIDENCE", "origem": "cond", "tipo": "Apartamento", "local": "Shaft externo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s5"}, {"nome": "BONAVITA CLUB ARAÇAGY", "origem": "cond", "tipo": "Casa", "local": "2° e 5° pavimento", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s6"}, {"nome": "BONAVITA PRIME RESIDENCE", "origem": "cond", "tipo": "Casa", "local": "2° e 5° pavimento", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s7"}, {"nome": "COSTA MAR", "origem": "cond", "tipo": "Casa", "local": "CTO externa", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s8"}, {"nome": "PORTAL DO ARAÇAGY II", "origem": "cond", "tipo": "Casa", "local": "CTO nos postes do condomínio", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s9"}, {"nome": "SPACE CALHAU 2", "origem": "cond", "tipo": "Apartamento", "local": "1° e 4° andar", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s10"}, {"nome": "RESIDENCIAL PATHERNON", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s11"}, {"nome": "VILLAGE DAS ARVORES I", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s12"}, {"nome": "RESIDENCIAL PORTAL DAS GAIVOTAS", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s13"}, {"nome": "TURU", "origem": "cond", "tipo": "Apartamento", "local": "CTO no térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s14"}, {"nome": "PORTAL DO ARAÇAGY III", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s15"}, {"nome": "MARIA ISABEL 1", "origem": "cond", "tipo": "Casa", "local": "CTO no poste", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s16"}, {"nome": "HILTON RODRIGUES", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s17"}, {"nome": "ENSEADA DOS VENTOS", "origem": "cond", "tipo": "Apartamento", "local": "2° andar", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s18"}, {"nome": "PEDRA DA MEMORIA E PRAIA GRANDE", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s19"}, {"nome": "GRAN VILLAGE BOULEVARD 2", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s20"}, {"nome": "PORTAL DO ARAÇAGY I", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s21"}, {"nome": "PRIME ARAÇAGY I", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s22"}, {"nome": "PORTINARI", "origem": "cond", "tipo": "Apartamento", "local": "Alçapão", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s23"}, {"nome": "PRIME ARAÇAGY 2", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s24"}, {"nome": "MALI", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s25"}, {"nome": "GRAN VILLAGE ARAÇAGY III", "origem": "cond", "tipo": "Apartamento", "local": "TÉRREO", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s26"}, {"nome": "YASMIN", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s27"}, {"nome": "ALTOS DO ATLANTICO", "origem": "cond", "tipo": "Apartamento", "local": "TÉRREO", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s28"}, {"nome": "QUINTAS DO TURU", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s29"}, {"nome": "MIRANTE DO TURU", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s30"}, {"nome": "VILLAGE DEL MAR", "origem": "cond", "tipo": "Apartamento", "local": "Shaft no térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s31"}, {"nome": "VILLAGE JARDINS 5", "origem": "cond", "tipo": "Apartamento", "local": "Shaft no térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s32"}, {"nome": "BARCELONA", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s33"}, {"nome": "RIO UNA", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s34"}, {"nome": "RESIDENCIAL ATHENAS", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s35"}, {"nome": "RESIDENCIAL RIO GRAJAU", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s36"}, {"nome": "SAO JOSE DE RIBAMAR II", "origem": "cond", "tipo": "Apartamento", "local": "Alçapão", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s37"}, {"nome": "FIT LIFE", "origem": "cond", "tipo": "Apartamento", "local": "Shaft no térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s38"}, {"nome": "RESIDENCIAL RIO TOCANTINS", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s39"}, {"nome": "RESIDENCIAL RIO PINDARÉ", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s40"}, {"nome": "VILLAGE DO PORTO", "origem": "cond", "tipo": "Apartamento", "local": "Shaft no térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s41"}, {"nome": "SOLAR BOUGANVILLE", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s42"}, {"nome": "D'ITALY I", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s43"}, {"nome": "GRAN VILLAGE ARAÇAGY V", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s44"}, {"nome": "MAR DEL PLATA", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s45"}, {"nome": "PRIME VINHAIS", "origem": "cond", "tipo": "Apartamento", "local": "1° e 4° pavimento", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s46"}, {"nome": "CASTELO DEL MARE", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s47"}, {"nome": "WEIMAR BARBOSA", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s48"}, {"nome": "GREEN PARK VILLAGE I", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s49"}, {"nome": "JAQUEIRAS I", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s50"}, {"nome": "RESIDENCIAL NOVO ANIL", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s51"}, {"nome": "VILLA BEACH RESIDENCE", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s52"}, {"nome": "BERTIOGA", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s53"}, {"nome": "MARFIM I", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s54"}, {"nome": "INFINITY", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s55"}, {"nome": "VILA RICA 1", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s56"}, {"nome": "GREEN PARK VILLAGE II", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s57"}, {"nome": "RESIDENCIAL AQUARELLE", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s58"}, {"nome": "SÃO RAFAEL", "origem": "cond", "tipo": "Apartamento", "local": "CTO proximo dá escada", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s59"}, {"nome": "EDIFÍCIO BELO HORIZONTE", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s60"}, {"nome": "ZEUS IV", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s61"}, {"nome": "SOLAR DA ILHA II", "origem": "cond", "tipo": "Apartamento", "local": "Shaft no térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s62"}, {"nome": "JARDINS DO TURU II", "origem": "cond", "tipo": "Apartamento", "local": "Shaft no térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s63"}, {"nome": "QUINTAS DO SOL", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s64"}, {"nome": "CASA DE VALOIS", "origem": "cond", "tipo": "Apartamento", "local": "3°, 8 e 12° pavimento", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s65"}, {"nome": "COSTA DO SAUÍPE", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s66"}, {"nome": "ILHA DO SOL", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s67"}, {"nome": "VILLARES DO TURU", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s68"}, {"nome": "DUNAS DO LITORAL", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s69"}, {"nome": "JARDIM DE ANDALUZIA", "origem": "cond", "tipo": "Apartamento", "local": "4°, 6° e 10° pavimento", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s70"}, {"nome": "ILHA PARQUE RESEDENCE", "origem": "cond", "tipo": "Apartamento", "local": "3°, 6°, 12° e 15° pavimento", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s71"}, {"nome": "JARDIM DE VÊNETO", "origem": "cond", "tipo": "Apartamento", "local": "3° e 8° pavimento", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s72"}, {"nome": "PORTO DAS DUNAS", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s73"}, {"nome": "FIT VIVARE 2", "origem": "cond", "tipo": "Apartamento", "local": "Shaft no térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s74"}, {"nome": "IBIZA", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s75"}, {"nome": "MERIBEL", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s76"}, {"nome": "ARTHUR CARVALHO I", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s77"}, {"nome": "RESIDENCIAL ALTO DO ANGELIM II", "origem": "cond", "tipo": "Apartamento", "local": "3° pavimento", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s78"}, {"nome": "ECO PARK II", "origem": "cond", "tipo": "Apartamento", "local": "3° pavimento", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s79"}, {"nome": "GRAN VILLAGE TURU VI", "origem": "cond", "tipo": "Apartamento", "local": "Shaft no térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s80"}, {"nome": "JARDIM EUROPA", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s81"}, {"nome": "BELLA CITTÁ", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s82"}, {"nome": "BRISAS ALTO DO CALHAU", "origem": "cond", "tipo": "Apartamento", "local": "3°, 8° e 12° pavimento", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s83"}, {"nome": "LE RÊVE", "origem": "cond", "tipo": "Apartamento", "local": "CTO fica na guarita", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s84"}, {"nome": "GOLDEN GREEN", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s85"}, {"nome": "GRAN VILLAGE BRASIL I", "origem": "cond", "tipo": "Apartamento", "local": "Shaft no térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s86"}, {"nome": "VILLAGE ALCÂNTARA", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s87"}, {"nome": "EDIFÍCIO PUNTA DEL ESTE", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s88"}, {"nome": "GRAN VILLAGE TURU V", "origem": "cond", "tipo": "Apartamento", "local": "Shaft no térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s89"}, {"nome": "D'ITALLY II", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s90"}, {"nome": "ECO PARK IV", "origem": "cond", "tipo": "Apartamento", "local": "3° pavimento", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s91"}, {"nome": "ARCO DO TRIUNFO RESIDENCE", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s92"}, {"nome": "ÁGUA BRANCA III", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s93"}, {"nome": "ECO PARK III", "origem": "cond", "tipo": "Apartamento", "local": "CTO no shaft", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s94"}, {"nome": "VILLAGE JACUMÃ I", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s95"}, {"nome": "MORADAS DA ILHA", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s96"}, {"nome": "VILLAGE DAS PALMEIRAS IV", "origem": "cond", "tipo": "Apartamento", "local": "Shaft no térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s97"}, {"nome": "JARDIM DOS ANTÚRIOS", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s98"}, {"nome": "ANA PAULA", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s99"}, {"nome": "VILLAGIO JARDINS 3", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s100"}, {"nome": "MARCELLE II", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s101"}, {"nome": "RESIDENCIAL PORTAL DA CIDADE", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s102"}, {"nome": "MADRI", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s103"}, {"nome": "ILHAS GREGAS", "origem": "cond", "tipo": "Apartamento", "local": "3° e 8° pavimento", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s104"}, {"nome": "VILLAGIO JARDINS 1", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s105"}, {"nome": "DIEGO VELAZQUEZ", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s106"}, {"nome": "RESIDENCIAL COHAFUMA", "origem": "cond", "tipo": "Apartamento", "local": "Shaft principal do prédio", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s107"}, {"nome": "FIT ONE RESIDENCE", "origem": "cond", "tipo": "Apartamento", "local": "3° e 6° pavimento", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s108"}, {"nome": "ITAMARACÁ II", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s109"}, {"nome": "VILLAGE DAS PALMEIRAS I", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s110"}, {"nome": "VILA DO CONDE", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s111"}, {"nome": "VILA DO CONDE", "origem": "cond", "tipo": "Apartamento", "local": "Shaft no térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s112"}, {"nome": "MARCELLE I", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s113"}, {"nome": "JARDINS DE ALLAH", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s114"}, {"nome": "VIVENDAS PONTA DO FAROL", "origem": "cond", "tipo": "Apartamento", "local": "4°, 8 e 12° pavimento", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s115"}, {"nome": "JARDIM DE VERSALHES", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s116"}, {"nome": "BEM TI VI", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s117"}, {"nome": "DAMHA", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s118"}, {"nome": "ARIRIZAL RESIDENCE", "origem": "cond", "tipo": "Apartamento", "local": "Shaft no térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s119"}, {"nome": "ECO VITALLE", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s120"}, {"nome": "GREEN PARK VILLAGE III", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s121"}, {"nome": "MARÍLIA 1", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s122"}, {"nome": "PRAIAS BELAS", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s123"}, {"nome": "RESIDENCIAL MAJESTIC II", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s124"}, {"nome": "GRAN VILLAGE TURU IV", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s125"}, {"nome": "NOVO TEMPO II - RESIDENCIAL VELUDO", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s126"}, {"nome": "RIVIERA CONFORT", "origem": "cond", "tipo": "Apartamento", "local": "1° andar", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s127"}, {"nome": "COLINA DOS COLIBRIS", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s128"}, {"nome": "EDIFÍCIO LIA", "origem": "cond", "tipo": "Apartamento", "local": "Shaft no térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s129"}, {"nome": "LYON", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s130"}, {"nome": "LA QUINTAS STUDIO", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s131"}, {"nome": "MIRANTES DO COHAFUMA", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s132"}, {"nome": "COLINA DAS PALMEIRAS", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s133"}, {"nome": "MARACANÃ", "origem": "cond", "tipo": "Apartamento", "local": "Shaft no térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s134"}, {"nome": "RESIDENCIAL GUARUJÁ", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s135"}, {"nome": "MARÍLIA 3", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s136"}, {"nome": "RESIDENCIAL COSTA DO SAUIPE", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s137"}, {"nome": "VIVARE TURU", "origem": "cond", "tipo": "Apartamento", "local": "Shaft externo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s138"}, {"nome": "SAN MARTIN", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s139"}, {"nome": "ILHA PRIME", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s140"}, {"nome": "BONAVITTA", "origem": "cond", "tipo": "Casa", "local": "Do lado de fora", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s141"}, {"nome": "VILLAGE PRIME CALHAU I", "origem": "cond", "tipo": "Apartamento", "local": "Térreo e 4° pavimento", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s142"}, {"nome": "GRAN VILLAGE TURU III", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s143"}, {"nome": "GRAN VILLAGE ARAÇAGY I", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s144"}, {"nome": "TURIM", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s145"}, {"nome": "ARCO VERDE", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s146"}, {"nome": "VILLE DE FRANCE", "origem": "cond", "tipo": "Apartamento", "local": "4° e 8° pavimento", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s147"}, {"nome": "JARDIM TROPICAL II", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s148"}, {"nome": "JARDIM TROPICAL I", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s149"}, {"nome": "VILLAGE GARDEN I", "origem": "cond", "tipo": "Apartamento", "local": "Shaft no térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s150"}, {"nome": "MURICI I", "origem": "cond", "tipo": "Apartamento", "local": "CTO no térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s151"}, {"nome": "BE LIFE CLUB 1", "origem": "cond", "tipo": "Apartamento", "local": "Shaft no térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s152"}, {"nome": "JARDINS DO TURU 3", "origem": "cond", "tipo": "Apartamento", "local": "Shaft no térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s153"}, {"nome": "ALCÂNTARA", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s154"}, {"nome": "NAPOLES", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s155"}, {"nome": "PACÍFICO III", "origem": "cond", "tipo": "Apartamento", "local": "Térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s156"}, {"nome": "VILLAGE DAS PALMEIRAS II", "origem": "cond", "tipo": "Apartamento", "local": "Shaft no térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s157"}, {"nome": "MARFIM II", "origem": "cond", "tipo": "Apartamento", "local": "Shaft no térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s158"}, {"nome": "SOLAR DA ILHA I", "origem": "cond", "tipo": "Apartamento", "local": "Shaft no térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s159"}, {"nome": "VARANDAS GRAND PARK", "origem": "cond", "tipo": "Apartamento", "local": "4° e 8° pavimento", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s160"}, {"nome": "GRAN VILLAGE SAO LUIS", "origem": "cond", "tipo": "Apartamento", "local": "Shaft no térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s161"}, {"nome": "JARDIM TROPICAL III", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s162"}, {"nome": "PACÍFICO I", "origem": "cond", "tipo": "Apartamento", "local": "Shaft externo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s163"}, {"nome": "ILHA PRIME PINHEIROS", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s164"}, {"nome": "EQUATORIAL", "origem": "cond", "tipo": "Apartamento", "local": "Shaft no térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s165"}, {"nome": "VALÊNCIA I", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s166"}, {"nome": "VALÊNCIA II", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s167"}, {"nome": "ISABELA", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s168"}, {"nome": "PORTO DO SOL", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s169"}, {"nome": "IPES II", "origem": "cond", "tipo": "Apartamento", "local": "CTO térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s170"}, {"nome": "CIDADE DE MILÃO", "origem": "cond", "tipo": "Apartamento", "local": "3° e 6° pavimento", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s171"}, {"nome": "SPORTS GARDEN HOLANDESES", "origem": "cond", "tipo": "Apartamento", "local": "2°, 6° e 15° pavimento", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s172"}, {"nome": "RESIDENCIAL SOLEMAR", "origem": "cond", "tipo": "Apartamento", "local": "CTO térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s173"}, {"nome": "GRAN VILLAGE RAPOSA", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s174"}, {"nome": "MARIA FERNANDA", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s175"}, {"nome": "MURICI II", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s176"}, {"nome": "ITAMARACÁ I", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s177"}, {"nome": "FERNANDO DE NORONHA", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s178"}, {"nome": "SOLAR DAS PALMEIRAS", "origem": "cond", "tipo": "Apartamento", "local": "Térreo e 5 pavimento", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s179"}, {"nome": "RESIDENCIAL JURITI", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s180"}, {"nome": "CONDOMÍNIO ANA LUZ", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s181"}, {"nome": "BAALBECK", "origem": "cond", "tipo": "Apartamento", "local": "1° andar", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s182"}, {"nome": "GARVEY PARK", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s183"}, {"nome": "ATHENAS PARK IV", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s184"}, {"nome": "GRAND PARK - PARQUE DAS ÁGUAS", "origem": "cond", "tipo": "Apartamento", "local": "3º e 8° PAVIMENTO", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s185"}, {"nome": "SABIÁ", "origem": "cond", "tipo": "Apartamento", "local": "Shaft externo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s186"}, {"nome": "TORRE DOS HOLANDESES", "origem": "cond", "tipo": "Apartamento", "local": "3°, 8 e 12° pavimento", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s187"}, {"nome": "RESIDENCIAL SOLAR ECO BOUGANVILLE", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s188"}, {"nome": "D'ITALY III", "origem": "cond", "tipo": "Apartamento", "local": "Shaft no térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s189"}, {"nome": "RESIDENCIAL IPES I", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s190"}, {"nome": "ATHENAS", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s191"}, {"nome": "INTERMARES VILLAGE", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s192"}, {"nome": "GRAN VILLAGE BRASIL II", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s193"}, {"nome": "MARIA ISABEL 2", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s194"}, {"nome": "QUINTA DA BOA VISTA", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s195"}, {"nome": "SPACE CALHAU 1", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s196"}, {"nome": "GRAN VILLAGE ELDORADO", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s197"}, {"nome": "BE LIFE CLUB 2", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s198"}, {"nome": "QUINTAS DE SÃO SEBASTIÃO", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s199"}, {"nome": "2° pavimento", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s200"}, {"nome": "JACUMÃ II", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s201"}, {"nome": "GRAN VILLAGE ARAÇAGY II", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s202"}, {"nome": "PAÇO DO LUMIAR", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s203"}, {"nome": "PRAIA PORTO DA BARRA", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s204"}, {"nome": "GRAN VILLAGE ARAÇAGY IV", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s205"}, {"nome": "ZEUS III", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s206"}, {"nome": "ZEUS II", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s207"}, {"nome": "ZEUS I", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s208"}, {"nome": "CASA DE BOURBON", "origem": "cond", "tipo": "Apartamento", "local": "2º PAVIMENTO (1º ANDAR)", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s209"}, {"nome": "VILLAGE DAS PALMEIRAS PRIME II", "origem": "cond", "tipo": "Apartamento", "local": "3º e 5° PAVIMENTO", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s210"}, {"nome": "TUPY II", "origem": "cond", "tipo": "Apartamento", "local": "CTO térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s211"}, {"nome": "EDIFÍCIO MONET", "origem": "cond", "tipo": "Apartamento", "local": "2° pavimento", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s212"}, {"nome": "MARÍLIA 2", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s213"}, {"nome": "PRAIA DAS FONTES", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s214"}, {"nome": "AVEIRO", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s215"}, {"nome": "PRAIA AZUL", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s216"}, {"nome": "JARDINS DE PROVENCE", "origem": "cond", "tipo": "Apartamento", "local": "3°, 8° e 12° pavimento", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s217"}, {"nome": "EDIFÍCIO RESIDENCIAL CÉZANNE", "origem": "cond", "tipo": "Apartamento", "local": "3° e 6° pavimento", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s218"}, {"nome": "GRAN PARK RESIDENCIAL", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s219"}, {"nome": "CIDADE DO PORTO", "origem": "cond", "tipo": "Apartamento", "local": "4° e 9° pavimento", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s220"}, {"nome": "JARDINS D'ITALIA RESIDENCE", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s221"}, {"nome": "GRAN VILLAGE TURU II", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s222"}, {"nome": "ATLANTIC VILLE", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s223"}, {"nome": "MAR AZUL", "origem": "cond", "tipo": "Apartamento", "local": "CTO na cobertura do prédio", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s224"}, {"nome": "ANDREIA", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s225"}, {"nome": "PRADO RESIDENCE", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s226"}, {"nome": "PRAIA DO OLHO D'AGUA", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s227"}, {"nome": "ILHA DO CONDE", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s228"}, {"nome": "RESERVA SÃO LUÍS IV", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s229"}, {"nome": "PREMIER RESIDENCE", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s230"}, {"nome": "ACAPULCO", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s231"}, {"nome": "MOOVE RESIDENCE", "origem": "cond", "tipo": "Apartamento", "local": "2°, 6° e 10º ANDAR", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s232"}, {"nome": "TUPY I", "origem": "cond", "tipo": "Apartamento", "local": "CTO térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s233"}, {"nome": "RESIDENCIAL SAN RAPHAEL", "origem": "cond", "tipo": "Apartamento", "local": "CTO externa", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s234"}, {"nome": "BOB KENNEDY", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s235"}, {"nome": "FERRAZZI", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s236"}, {"nome": "SARA REZENDE", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s237"}, {"nome": "MARIANNE", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s238"}, {"nome": "GRAN VILLAGE TURU I", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s239"}, {"nome": "VILLA FIORI", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s240"}, {"nome": "CIDADE DE LONDRES RESIDENCE", "origem": "cond", "tipo": "Apartamento", "local": "3° e 7° pavimento", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s241"}, {"nome": "RIO PIMENTA", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s242"}, {"nome": "RESIDENCIAL ILHA DE ARUBA", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s243"}, {"nome": "ALTO DO CALHAU RESIDENCE", "origem": "cond", "tipo": "Apartamento", "local": "Sala no térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s244"}, {"nome": "ITALIA RESIDENCE", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s245"}, {"nome": "VILLAGE DAS PALMEIRAS PRIME", "origem": "cond", "tipo": "Apartamento", "local": "3° e 6° pavimento", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s246"}, {"nome": "RESIDENCIAL TURU", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s247"}, {"nome": "VILLAGE DAS PALMEIRAS III", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s248"}, {"nome": "BELIZE RESIDENCE", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s249"}, {"nome": "GRAN VILLAGE I", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s250"}, {"nome": "MAJESTIC RESIDENCE", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s251"}, {"nome": "GRAN VILLAGE COHAMA", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s252"}, {"nome": "RAINHA DA PAZ", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s253"}, {"nome": "VILLAGE PARADISO", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s254"}, {"nome": "VENEZA", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s255"}, {"nome": "RESIDENCIAL VOLPI", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s256"}, {"nome": "VALE DO PARAIBA", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s257"}, {"nome": "VELEIROS DO ELDORADO 2", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s258"}, {"nome": "GREEN PARK", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s259"}, {"nome": "VILLE DE LA TOUCHE", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s260"}, {"nome": "VILLE D'OR", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s261"}, {"nome": "GARDEN PARK", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s262"}, {"nome": "INTERLAGOS", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s263"}, {"nome": "GUAIMBÉS", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s264"}, {"nome": "RESIDENCIAL BELA CINTRA PRIME", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s265"}, {"nome": "RESIDENCIAL ELDORADO PARK", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s266"}, {"nome": "JARDINS DO ELDORADO TOWNHOUSES", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s267"}, {"nome": "VERONA RESIDENCE", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s268"}, {"nome": "COSTA ARAÇAGY CLUBE", "origem": "cond", "tipo": "Apartamento", "local": "térreo e 6° pavimento", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s269"}, {"nome": "FREEDOM", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s270"}, {"nome": "VILLAGE DU SOLEIL", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s271"}, {"nome": "VILA ROMANA", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s272"}, {"nome": "RIO CLARO VILLAGE", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s273"}, {"nome": "RESIDENCIAL QUINTAS DO SOL", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s274"}, {"nome": "PORTAL DO ATLÂNTICO", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s275"}, {"nome": "OLIVER RIVIERA", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s276"}, {"nome": "MIRAMAR I", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s277"}, {"nome": "MEDITERRANEO", "origem": "cond", "tipo": "", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": ["Precisa retirar"], "extras": [], "id": "s278"}, {"nome": "RESIDENCIAL GAIVOTA", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s279"}, {"nome": "JARDIM DOS FARAÓS", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s280"}, {"nome": "RESIDENCIAL PARK RIVER", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s281"}, {"nome": "JARDIM ATLANTICO", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s282"}, {"nome": "ILHA DO SOL", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s283"}, {"nome": "GÊNOVA", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s284"}, {"nome": "ENSEADA DO ATLÂNTICO", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s285"}, {"nome": "JARDINS DO TURU 1", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s286"}, {"nome": "PELICANO", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s287"}, {"nome": "FERRARA", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s288"}, {"nome": "IPEM ANGELIM", "origem": "cond", "tipo": "Apartamento", "local": "CTO externa", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s289"}, {"nome": "ATLÂNTICO", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s290"}, {"nome": "BARRAMAR 2", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s291"}, {"nome": "LARA LIOTTO RESIDENCE", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s292"}, {"nome": "RESIDENCIAL BARCELONA", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s293"}, {"nome": "LARISSA", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s294"}, {"nome": "NOVA REPÚBLICA (B1 E B2)", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s295"}, {"nome": "CEDRO", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s296"}, {"nome": "MEDITERRANEE", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s297"}, {"nome": "JUÇARA II", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s298"}, {"nome": "JUÇARA I", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s299"}, {"nome": "BARRAMAR 1", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s300"}, {"nome": "LAGO VERDE II", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s301"}, {"nome": "LAGO VERDE I", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s302"}, {"nome": "MEDITERRANEO", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s303"}, {"nome": "GRAN VILLAGE II", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s304"}, {"nome": "PONTAL DA ILHA", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s305"}, {"nome": "LA VILLE", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s306"}, {"nome": "ATLÂNTICO PARK", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s307"}, {"nome": "ARAÇAGY VILLAGE", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s308"}, {"nome": "ONDA MAR RESIDENCE", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s309"}, {"nome": "LAGO AZUL", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s310"}, {"nome": "GRAN VILLAGE BOULEVARD 1", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s311"}, {"nome": "FAROL DO ARAÇAGY", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s312"}, {"nome": "JACUMÃ 1", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s313"}, {"nome": "RESIDENCIAL PRAIA GRANDE", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s314"}, {"nome": "BUENA VISTA", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s315"}, {"nome": "MILANO", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s316"}, {"nome": "LE BARON", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s317"}, {"nome": "JARDIM DOS FARAÓS", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s318"}, {"nome": "RECANTO DO CALHAU - BLOCO D", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s319"}, {"nome": "BRISAS LIFE", "origem": "cond", "tipo": "Apartamento", "local": "3°, 8° e 12° pavimento", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s320"}, {"nome": "WAY RESIDENCE", "origem": "cond", "tipo": "Apartamento", "local": "3°, 8° e 12° pavimento", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s321"}, {"nome": "GREEN VILLAGE RESIDENCE", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s322"}, {"nome": "JARDIM ELDORADO", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s323"}, {"nome": "VELEIROS DA COHAMA", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s324"}, {"nome": "ECO PARK I", "origem": "cond", "tipo": "Apartamento", "local": "3° pavimento", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s325"}, {"nome": "VILLAGE DO PORTO II", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s326"}, {"nome": "RIO PARNAÍBA", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s327"}, {"nome": "RESIDENCIAL VITRAL DO CALHAU", "origem": "cond", "tipo": "Apartamento", "local": "Shaft térreo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s328"}, {"nome": "AIDA", "origem": "cond", "tipo": "Apartamento", "local": "Shaft externo", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s329"}, {"nome": "SOLAR DA ILHA III", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s330"}, {"nome": "D'ITALY IV", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s331"}, {"nome": "GREEN PARK VILLAGE III", "origem": "cond", "tipo": "", "local": "CTO na tubulação", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s332"}, {"nome": "RESERVA DOS BURITIS", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s333"}, {"nome": "RIO MEARIM", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s334"}, {"nome": "EDIFÍCIO FABIANA", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s335"}, {"nome": "VILLAGE DAS ÁRVORES II", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s336"}, {"nome": "GREEN BLUE", "origem": "cond", "tipo": "Apartamento", "local": "Splitter Box no 2°, 5° e 9° andar", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s337"}, {"nome": "EDIFÍCIO SANPAOLO", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s338"}, {"nome": "PRIME COHAMA", "origem": "cond", "tipo": "Casa", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s339"}, {"nome": "VILLE", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s340"}, {"nome": "FERRARA (RENASCENÇA)", "origem": "cond", "tipo": "Apartamento", "local": "3° e 6° Pavimento", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s341"}, {"nome": "RESIDENCIAL DEL FIORI", "origem": "cond", "tipo": "Apartamento", "local": "Splitter Box no 3°, 6° e 9° nas duas torres", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s342"}, {"nome": "STELLA MARIS", "origem": "cond", "tipo": "Apartamento", "local": "", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s343"}, {"nome": "MARIA ISABEL 1", "origem": "cond", "tipo": "Apartamento", "local": "Cond. Casa (CTO poste)", "obs": "", "extId": "", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s344"}, {"nome": "ÁGAPE PLAZA CENTER", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "591", "clientes": "1", "conferido": false, "tags": [], "extras": [], "id": "s345"}, {"nome": "AGUIAR CENTER II", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "569", "clientes": "1", "conferido": false, "tags": [], "extras": [], "id": "s346"}, {"nome": "ANDREAZZA CENTER", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "547", "clientes": "3", "conferido": false, "tags": [], "extras": [], "id": "s347"}, {"nome": "ÁPIA CENTER", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "531", "clientes": "2", "conferido": false, "tags": [], "extras": [], "id": "s348"}, {"nome": "ARAÇAGY CENTER", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "529", "clientes": "4", "conferido": false, "tags": [], "extras": [], "id": "s349"}, {"nome": "ARARAS CENTER", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "571", "clientes": "2", "conferido": false, "tags": [], "extras": [], "id": "s350"}, {"nome": "ARIRIZAL CENTER", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "555", "clientes": "1", "conferido": false, "tags": [], "extras": [], "id": "s351"}, {"nome": "ATLÂNTICO CENTER", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "573", "clientes": "1", "conferido": false, "tags": [], "extras": [], "id": "s352"}, {"nome": "AVICENIA CENTER", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "567", "clientes": "1", "conferido": false, "tags": [], "extras": [], "id": "s353"}, {"nome": "BARCELONA CENTER", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "561", "clientes": "2", "conferido": false, "tags": [], "extras": [], "id": "s354"}, {"nome": "BELO CENTER", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "605", "clientes": "1", "conferido": false, "tags": [], "extras": [], "id": "s355"}, {"nome": "BELOHA CENTER", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "607", "clientes": "1", "conferido": false, "tags": [], "extras": [], "id": "s356"}, {"nome": "BRASIL CENTER", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "587", "clientes": "1", "conferido": false, "tags": [], "extras": [], "id": "s357"}, {"nome": "CARNAÚBAS CENTER", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "551", "clientes": "1", "conferido": false, "tags": [], "extras": [], "id": "s358"}, {"nome": "CENTER BANDEIRAS PLAZA", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "597", "clientes": "0", "conferido": false, "tags": [], "extras": [], "id": "s359"}, {"nome": "CENTRO COMERCIAL BACURI CENTER", "origem": "center", "tipo": "Galeria/Centro Comercial", "local": "", "obs": "", "extId": "309", "clientes": "8", "conferido": false, "tags": [], "extras": [], "id": "s360"}, {"nome": "CENTRO COMERCIAL MAC CENTER", "origem": "center", "tipo": "Galeria/Centro Comercial", "local": "", "obs": "", "extId": "193", "clientes": "13", "conferido": false, "tags": [], "extras": [], "id": "s361"}, {"nome": "CENTRO COMERCIAL NN CENTER", "origem": "center", "tipo": "Galeria/Centro Comercial", "local": "", "obs": "", "extId": "541", "clientes": "2", "conferido": false, "tags": [], "extras": [], "id": "s362"}, {"nome": "CENTRO COMERCIAL PREMIER CENTER", "origem": "center", "tipo": "Galeria/Centro Comercial", "local": "", "obs": "", "extId": "563", "clientes": "1", "conferido": false, "tags": [], "extras": [], "id": "s363"}, {"nome": "CENTER PRIME TURU", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "517", "clientes": "2", "conferido": false, "tags": [], "extras": [], "id": "s364"}, {"nome": "CENTER VITÓRIA", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "557", "clientes": "2", "conferido": false, "tags": [], "extras": [], "id": "s365"}, {"nome": "CONTE CENTER", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "539", "clientes": "9", "conferido": false, "tags": [], "extras": [], "id": "s366"}, {"nome": "DALPLAZA CENTER", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "383", "clientes": "2", "conferido": false, "tags": [], "extras": [], "id": "s367"}, {"nome": "DOM CENTER", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "513", "clientes": "6", "conferido": false, "tags": [], "extras": [], "id": "s368"}, {"nome": "GALERIA JOSÉ E MARIA CENTER", "origem": "center", "tipo": "Galeria/Centro Comercial", "local": "", "obs": "", "extId": "533", "clientes": "1", "conferido": false, "tags": [], "extras": [], "id": "s369"}, {"nome": "GALERIA MILANO", "origem": "center", "tipo": "Galeria/Centro Comercial", "local": "", "obs": "", "extId": "507", "clientes": "1", "conferido": false, "tags": [], "extras": [], "id": "s370"}, {"nome": "GALERIA PRIME CENTER", "origem": "center", "tipo": "Galeria/Centro Comercial", "local": "", "obs": "", "extId": "519", "clientes": "2", "conferido": false, "tags": [], "extras": [], "id": "s371"}, {"nome": "GALERIA VILLE DE KÓS CENTER", "origem": "center", "tipo": "Galeria/Centro Comercial", "local": "", "obs": "", "extId": "577", "clientes": "1", "conferido": false, "tags": [], "extras": [], "id": "s372"}, {"nome": "GOLDEN SHOPPING CALHAU", "origem": "center", "tipo": "Shopping", "local": "", "obs": "", "extId": "503", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s373"}, {"nome": "EDIFÍCIO SÃO LUÍS CENTER", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "511", "clientes": "4", "conferido": false, "tags": [], "extras": [], "id": "s374"}, {"nome": "FRANCYS CENTER", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "583", "clientes": "1", "conferido": false, "tags": [], "extras": [], "id": "s375"}, {"nome": "GRAND CENTER", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "545", "clientes": "1", "conferido": false, "tags": [], "extras": [], "id": "s376"}, {"nome": "HOPE CENTER", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "589", "clientes": "2", "conferido": false, "tags": [], "extras": [], "id": "s377"}, {"nome": "ILHA CENTER", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "565", "clientes": "1", "conferido": false, "tags": [], "extras": [], "id": "s378"}, {"nome": "ILHA DO SOL CENTER", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "553", "clientes": "0", "conferido": false, "tags": [], "extras": [], "id": "s379"}, {"nome": "IMPERIAL CENTER", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "525", "clientes": "4", "conferido": false, "tags": [], "extras": [], "id": "s380"}, {"nome": "IPÊ CENTER", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "543", "clientes": "3", "conferido": false, "tags": [], "extras": [], "id": "s381"}, {"nome": "LARA CENTER", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "535", "clientes": "1", "conferido": false, "tags": [], "extras": [], "id": "s382"}, {"nome": "LARISSA CENTER", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "509", "clientes": "2", "conferido": false, "tags": [], "extras": [], "id": "s383"}, {"nome": "MALIBU CENTER", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "575", "clientes": "2", "conferido": false, "tags": [], "extras": [], "id": "s384"}, {"nome": "MM CENTER", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "515", "clientes": "2", "conferido": false, "tags": [], "extras": [], "id": "s385"}, {"nome": "MM CENTER TURU", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "593", "clientes": "0", "conferido": false, "tags": [], "extras": [], "id": "s386"}, {"nome": "MORAES CENTER", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "579", "clientes": "1", "conferido": false, "tags": [], "extras": [], "id": "s387"}, {"nome": "NORTE CENTER", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "559", "clientes": "0", "conferido": false, "tags": [], "extras": [], "id": "s388"}, {"nome": "OURO MINAS CENTER", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "527", "clientes": "4", "conferido": false, "tags": [], "extras": [], "id": "s389"}, {"nome": "P LAURA CENTER", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "581", "clientes": "0", "conferido": false, "tags": [], "extras": [], "id": "s390"}, {"nome": "RIO ANIL SHOPPING", "origem": "center", "tipo": "Shopping", "local": "", "obs": "", "extId": "212", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s391"}, {"nome": "POMPEIA CENTER", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "585", "clientes": "1", "conferido": false, "tags": [], "extras": [], "id": "s392"}, {"nome": "QUEIROZ CENTER", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "523", "clientes": "4", "conferido": false, "tags": [], "extras": [], "id": "s393"}, {"nome": "SHOPPING DO AUTOMÓVEL", "origem": "center", "tipo": "Shopping", "local": "", "obs": "", "extId": "367", "clientes": "", "conferido": false, "tags": [], "extras": [], "id": "s394"}, {"nome": "RJ CENTER", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "521", "clientes": "2", "conferido": false, "tags": [], "extras": [], "id": "s395"}, {"nome": "ROYAL CENTER", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "549", "clientes": "2", "conferido": false, "tags": [], "extras": [], "id": "s396"}, {"nome": "VIA LA TOUCHE CENTER", "origem": "center", "tipo": "Center", "local": "", "obs": "", "extId": "537", "clientes": "2", "conferido": false, "tags": [], "extras": [], "id": "s397"}, {"nome": "GALERIA A&D", "origem": "center", "tipo": "Galeria", "local": "", "obs": "", "extId": "609", "clientes": "1", "conferido": false, "tags": [], "extras": [], "id": "s398"}, {"nome": "GALERIA PORTUGAL", "origem": "center", "tipo": "Galeria", "local": "", "obs": "", "extId": "611", "clientes": "3", "conferido": false, "tags": [], "extras": [], "id": "s399"}, {"nome": "GALERIA SPACE ROOM", "origem": "center", "tipo": "Galeria", "local": "", "obs": "", "extId": "613", "clientes": "1", "conferido": false, "tags": [], "extras": [], "id": "s400"}, {"nome": "GALERIA DU NORTE", "origem": "center", "tipo": "Galeria", "local": "", "obs": "", "extId": "615", "clientes": "1", "conferido": false, "tags": [], "extras": [], "id": "s401"}, {"nome": "GALERIA FIORI", "origem": "center", "tipo": "Galeria", "local": "", "obs": "", "extId": "617", "clientes": "2", "conferido": false, "tags": [], "extras": [], "id": "s402"}, {"nome": "GALERIA PINHEIRO", "origem": "center", "tipo": "Galeria", "local": "", "obs": "", "extId": "619", "clientes": "1", "conferido": false, "tags": [], "extras": [], "id": "s403"}, {"nome": "GALERIA VICENIA", "origem": "center", "tipo": "Galeria", "local": "", "obs": "", "extId": "567", "clientes": "1", "conferido": false, "tags": [], "extras": [], "id": "s404"}, {"nome": "GALERIA WAND", "origem": "center", "tipo": "Galeria", "local": "", "obs": "", "extId": "621", "clientes": "1", "conferido": false, "tags": [], "extras": [], "id": "s405"}, {"nome": "GALERIA 50A", "origem": "center", "tipo": "Galeria", "local": "", "obs": "", "extId": "623", "clientes": "1", "conferido": false, "tags": [], "extras": [], "id": "s406"}, {"nome": "GALERIA AMSTERDÃ", "origem": "center", "tipo": "Galeria", "local": "", "obs": "", "extId": "625", "clientes": "1", "conferido": false, "tags": [], "extras": [], "id": "s407"}, {"nome": "MARCUS BARBOSA INTELLIGENT OFFICE", "origem": "center", "tipo": "Empresarial", "local": "", "obs": "", "extId": "214", "clientes": "16", "conferido": false, "tags": [], "extras": [], "id": "s408"}, {"nome": "90 TRADE CENTER", "origem": "center", "tipo": "Empresarial", "local": "", "obs": "", "extId": "627", "clientes": "2", "conferido": false, "tags": [], "extras": [], "id": "s409"}, {"nome": "CENTRO EMPRESARIAL BANDEIRA PLAZA", "origem": "center", "tipo": "Empresarial", "local": "", "obs": "", "extId": "629", "clientes": "1", "conferido": false, "tags": [], "extras": [], "id": "s410"}, {"nome": "SP MALL COHAMA MEDICAL CENTER", "origem": "center", "tipo": "Empresarial", "local": "", "obs": "", "extId": "631", "clientes": "1", "conferido": false, "tags": [], "extras": [], "id": "s411"}];
+const KEY = 'fixtell-condominios-v1';
+const P = {
+  search:'<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>',
+  x:'<path d="M18 6 6 18M6 6l12 12"/>',
+  chevR:'<path d="m9 18 6-6-6-6"/>',
+  chevD:'<path d="m6 9 6 6 6-6"/>',
+  pin:'<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>',
+  check:'<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>',
+  circle:'<circle cx="12" cy="12" r="10"/>',
+  alert:'<path d="m21.7 18-8-14a2 2 0 0 0-3.4 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3Z"/><path d="M12 9v4M12 17h.01"/>',
+  info:'<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>',
+  building:'<rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4M8 6h.01M12 6h.01M16 6h.01M8 10h.01M12 10h.01M16 10h.01M8 14h.01M12 14h.01M16 14h.01"/>',
+  home:'<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>',
+  store:'<path d="m2 7 2-4h16l2 4"/><path d="M4 7v13h16V7"/><path d="M2 7a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0"/>',
+  pencil:'<path d="M17 3a2.8 2.8 0 0 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>',
+  trash:'<path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>',
+  download:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>',
+  upload:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>',
+  rotate:'<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/>',
+  menu:'<path d="M4 6h16M4 12h16M4 18h16"/>',
+  list:'<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',
+  layers:'<path d="m12 2 10 5-10 5L2 7z"/><path d="m2 17 10 5 10-5M2 12l10 5 10-5"/>',
+  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>'
+};
+Object.assign(P, {
+  ext:'<path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>',
+  nav:'<path d="m3 11 19-9-9 19-2-8-8-2Z"/>',
+  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+  moon:'<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>'
+});
+const ic = (n, c='') => '<svg class="ic '+c+'" viewBox="0 0 24 24" aria-hidden="true">'+(P[n]||'')+'</svg>';
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+const uid = () => 'n' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+
+const HUES = {'Apartamento':220,'Casa':24,'Center':272,'Galeria':172,'Galeria/Centro Comercial':192,'Empresarial':338,'Shopping':140};
+const hueOf = t => { if (!t || t === 'Sem tipo') return null; if (HUES[t] != null) return HUES[t]; let h = 0; for (const c of t) h = (h * 31 + c.charCodeAt(0)) % 360; return h; };
+const tipoIcon = t => t === 'Apartamento' ? 'building' : t === 'Casa' ? 'home' : t === 'Sem tipo' ? 'list' : 'store';
+
+/* ---------- temas ---------- */
+const THEMES = [['auto','Automático'],['light','Claro','#ffffff','#e2530a'],['dark','Escuro','#1d1b19','#f26a21'],['midnight','Meia-noite','#111a2e','#4d8dff'],['ocean','Oceano','#eef5f9','#0a7fb8'],['forest','Floresta','#f1f4ee','#2f8f4e'],['violet','Violeta','#f5f2fb','#7c3aed']];
+let themePref = 'auto';
+try { themePref = localStorage.getItem('fixtell-tema') || 'auto'; } catch (e) {}
+const mq = window.matchMedia ? matchMedia('(prefers-color-scheme: dark)') : null;
+const resolveTheme = p => p === 'auto' ? (mq && mq.matches ? 'dark' : 'light') : p;
+const isDarkTheme = t => t === 'dark' || t === 'midnight';
+function applyTheme() {
+  const t = resolveTheme(themePref);
+  document.documentElement.setAttribute('data-theme', t);
+  const q = $('#qtheme'); if (q) q.innerHTML = ic(isDarkTheme(t) ? 'sun' : 'moon');
+}
+function renderThemes() {
+  const cur = THEMES.find(t => t[0] === themePref) || THEMES[0];
+  $('#themes').innerHTML = THEMES.map(t => '<button type="button" class="sw' + (themePref === t[0] ? ' on' : '') + '" data-act="theme" data-t="' + t[0] + '" title="' + t[1] + '" aria-label="Tema ' + t[1] + '" aria-pressed="' + (themePref === t[0]) + '"><i style="background:' + (t[0] === 'auto' ? 'linear-gradient(135deg,#fff 50%,#1d1b19 50%)' : 'linear-gradient(135deg,' + t[2] + ' 50%,' + t[3] + ' 50%)') + '"></i></button>').join('') + '<div class="themename">Tema: ' + cur[1] + '</div>';
+}
+function setTheme(p) { themePref = p; try { localStorage.setItem('fixtell-tema', p); } catch (e) {} applyTheme(); renderThemes(); }
+if (mq && mq.addEventListener) mq.addEventListener('change', () => { if (themePref === 'auto') applyTheme(); });
+
+/* ---------- mapa e shaft ---------- */
+function mapHref(v) {
+  v = String(v || '').trim(); if (!v) return '';
+  if (/^https?:\/\//i.test(v)) return v;
+  if (/^(www\.|maps\.app\.goo\.gl|goo\.gl\/maps|google\.[a-z.]+\/maps|maps\.google\.)/i.test(v)) return 'https://' + v;
+  return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(v);
+}
+function mapRow(r) {
+  const h = mapHref(r.mapa);
+  return h ? '<a class="maplink" href="' + esc(h) + '" target="_blank" rel="noopener noreferrer">' + ic('nav') + 'Abrir no mapa' + ic('ext') + '</a>'
+           : '<button type="button" class="maplink add" data-act="addmap" data-id="' + r.id + '">' + ic('plus') + 'Adicionar localização</button>';
+}
+function migrate(r) {
+  if (r.mapa == null) r.mapa = '';
+  if (r.shaft == null) r.shaft = /shaft/i.test(r.local || '') && /t[eé]rreo/i.test(r.local || '');
+  return r;
+}
+
+/* ---------- compartilhamento (banco de dados da página) ---------- */
+const COL = 'condominios';
+let MODE = 'pending';          /* pending | shared | local */
+let DB = null, CAN_WRITE = null, remote = [], seeding = false, seedChecked = false;
+const HOLDER = 'h' + Math.random().toString(36).slice(2, 10);
+const NOTE_LOCAL = 'Modo local: abra pelo claude.ai para ver e editar os dados compartilhados. Alterações ficam só neste navegador.';
+const canEdit = () => MODE !== 'shared' || CAN_WRITE !== false;
+const noteShared = () => canEdit() ? 'Dados compartilhados: as alterações aparecem para todos que abrirem esta página.' : 'Você está em modo somente leitura. Peça acesso de edição ao dono da página.';
+const setNote = t => { const el = $('#savenote'); if (el) el.textContent = t; };
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const clean = r => JSON.parse(JSON.stringify(r));
+let wq = Promise.resolve();
+const enqueue = fn => (wq = wq.then(fn).catch(() => {}));
+async function withRetry(fn) {
+  for (let i = 0; i < 4; i++) {
+    try { return await fn(); }
+    catch (e) { const c = e && e.code; if (c === 'unavailable' || c === 'resource_exhausted') { await sleep(700 * (i + 1) + Math.random() * 400); continue; } throw e; }
+  }
+  return fn();
+}
+function dbErr(e) {
+  const c = e && e.code;
+  if (c === 'invalid_argument') { CAN_WRITE = false; toast('Sem permissão para salvar: seu acesso é somente leitura.'); }
+  else if (c === 'quota_exceeded') toast('Limite de armazenamento da página atingido.');
+  else toast('Não foi possível salvar agora. Tente de novo em instantes.');
+  S.recs = remote.map(r => Object.assign({}, r)); setNote(noteShared()); render();
+}
+const dbSet = r => enqueue(async () => { try { await withRetry(() => DB.collection(COL).doc(r.id).set(clean(r))); } catch (e) { dbErr(e); } });
+const dbDel = id => enqueue(async () => { try { await withRetry(() => DB.collection(COL).doc(id).delete()); } catch (e) { dbErr(e); } });
+const persist = r => MODE === 'shared' ? dbSet(r) : save();
+const persistDel = id => MODE === 'shared' ? dbDel(id) : save();
+function applyAll(recs) {
+  if (MODE !== 'shared') { S.recs = recs; save(); render(); return; }
+  const keep = new Set(recs.map(r => r.id));
+  const del = S.recs.filter(r => !keep.has(r.id)).map(r => r.id);
+  S.recs = recs; render();
+  enqueue(async () => {
+    const total = del.length + recs.length; let n = 0;
+    const tick = () => { if (++n % 10 === 0) setNote('Sincronizando… ' + n + '/' + total); };
+    for (const id of del) { try { await withRetry(() => DB.collection(COL).doc(id).delete()); } catch (e) { return dbErr(e); } tick(); }
+    for (const r of recs) { try { await withRetry(() => DB.collection(COL).doc(r.id).set(clean(r))); } catch (e) { return dbErr(e); } tick(); }
+    setNote(noteShared()); toast('Dados atualizados para todos');
+  });
+}
+async function seedMissing(existing) {
+  if (!canEdit()) return;
+  let m, lz;
+  try { m = await DB.doc('config/seed').get(); if (m.exists && m.data().done) return; lz = await DB.doc('config/seed').acquire({ holder: HOLDER, ttlMs: 300000 }); } catch (e) { return; }
+  if (!lz.acquired) return;
+  const todo = SEED.filter(r => !existing.has(r.id));
+  seeding = true; render();
+  enqueue(async () => {
+    let n = 0;
+    for (const r of todo) {
+      try { await withRetry(() => DB.collection(COL).doc(r.id).set(clean(migrate(Object.assign({}, r))))); } catch (e) { seeding = false; return dbErr(e); }
+      if (++n % 10 === 0) setNote('Carregando a planilha pela primeira vez… ' + n + '/' + todo.length);
+    }
+    try { await DB.doc('config/seed').set({ done: true, at: Date.now() }); } catch (e) {}
+    seeding = false; setNote(noteShared()); render();
+  });
+}
+function emptyHTML() {
+  if (MODE === 'pending') return '<div class="empty"><b>Conectando…</b>Carregando os dados compartilhados.</div>';
+  if (seeding) return '<div class="empty"><b>Carregando a planilha pela primeira vez…</b>Os registros vão aparecendo aqui em instantes.</div>';
+  return '<div class="empty"><b>Nenhum registro encontrado</b>Ajuste a busca ou os filtros, ou cadastre um novo registro.</div>';
+}
+async function boot() {
+  let db = null;
+  try { db = (window.claude && claude.use) ? await claude.use('db') : null; } catch (e) {}
+  if (!db) { MODE = 'local'; load(); setNote(NOTE_LOCAL); render(); return; }
+  DB = db;
+  try { const u = await claude.use('user'); if (u && u.can) CAN_WRITE = await u.can('data.write'); } catch (e) {}
+  MODE = 'shared'; setNote(noteShared()); render();
+  const tmo = setTimeout(() => setNote('Ainda sem resposta do banco compartilhado. Os dados podem estar desatualizados.'), 10000);
+  DB.collection(COL).onSnapshot(snap => {
+    remote = snap.docs.map(d => migrate(Object.assign({}, d.data(), { id: d.id })));
+    S.recs = remote.map(r => Object.assign({}, r));
+    if (!snap.metadata.fromCache) {
+      clearTimeout(tmo); setNote(noteShared());
+      if (!seedChecked) { seedChecked = true; seedMissing(new Set(remote.map(r => r.id))); }
+    }
+    render();
+  }, e => { clearTimeout(tmo); setNote('Não foi possível ler os dados compartilhados (' + ((e && e.code) || 'erro') + ').'); });
+}
+function loadUI() {
+  try { const raw = localStorage.getItem(KEY + '-ui'); if (raw) { Object.assign(S.ui, JSON.parse(raw)); S.ui.q = ''; } } catch (e) {}
+}
+
+let S = { recs: [], ui: { view: 'todos', tipos: [], q: '', group: 'tipo', closed: [] } };
+const open = new Set();
+let saveFailed = false;
+
+function load() {
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (raw) { const d = JSON.parse(raw); if (d && Array.isArray(d.recs)) { S.recs = d.recs.map(migrate); Object.assign(S.ui, d.ui || {}); S.ui.q = ''; return; } }
+  } catch (e) {}
+  S.recs = JSON.parse(JSON.stringify(SEED)).map(migrate);
+}
+function save() {
+  try {
+    const ui = { view: S.ui.view, tipos: S.ui.tipos, group: S.ui.group, closed: S.ui.closed };
+    if (MODE !== 'local') localStorage.setItem(KEY + '-ui', JSON.stringify(ui));
+    else localStorage.setItem(KEY, JSON.stringify({ recs: S.recs, ui }));
+  }
+  catch (e) { if (!saveFailed) { saveFailed = true; $('#savenote').textContent = 'Este navegador não permite salvar. Faça o backup (JSON) antes de sair.'; } }
+}
+
+const VIEWS = [
+  ['todos', 'Todos os registros', 'layers', r => true],
+  ['cond', 'Condomínios', 'building', r => r.origem === 'cond'],
+  ['center', 'Centers e comerciais', 'store', r => r.origem === 'center'],
+  ['sem', 'Sem localização', 'alert', r => !r.local],
+  ['shaft', 'Shaft no térreo', 'building', r => r.shaft],
+  ['semmapa', 'Sem link do mapa', 'pin', r => !r.mapa],
+  ['conf', 'Conferidos', 'check', r => r.conferido]
+];
+const tipoOf = r => r.tipo || 'Sem tipo';
+const letterOf = r => { const c = norm(r.nome).trim().charAt(0).toUpperCase(); return /[A-Z]/.test(c) ? c : '#'; };
+const hay = r => norm([r.nome, r.tipo, r.local, r.obs, r.extId, r.clientes, (r.tags || []).join(' '), (r.extras || []).map(x => x.k + ' ' + x.v).join(' ')].join(' '));
+
+function visible() {
+  const v = VIEWS.find(x => x[0] === S.ui.view) || VIEWS[0];
+  const q = norm(S.ui.q).trim();
+  const ts = S.ui.tipos;
+  return S.recs.filter(r => v[3](r) && (!ts.length || ts.includes(tipoOf(r))) && (!q || q.split(/\s+/).every(w => hay(r).includes(w))));
+}
+
+function renderNav() {
+  $('#nav').innerHTML = VIEWS.map(v => {
+    const n = S.recs.filter(v[3]).length;
+    return '<button type="button" class="nav' + (S.ui.view === v[0] ? ' on' : '') + (v[0] === 'sem' ? ' warnbadge' : '') + '" data-act="view" data-v="' + v[0] + '">' + ic(v[2]) + v[1] + '<span class="n">' + n + '</span></button>';
+  }).join('');
+}
+function renderStats() {
+  const t = S.recs.length, com = S.recs.filter(r => r.local).length, cf = S.recs.filter(r => r.conferido).length;
+  const pc = t ? Math.round(cf / t * 100) : 0;
+  $('#stats').innerHTML =
+    '<div class="stat"><span>Total cadastrado</span><b>' + t + '</b></div>' +
+    '<div class="stat"><span>Com localização do splitter box</span><b>' + com + '</b><div class="bar"><i style="width:' + (t ? com / t * 100 : 0) + '%"></i></div></div>' +
+    '<div class="stat"><span>Sem localização</span><b>' + (t - com) + '</b></div>' +
+    '<div class="stat"><span>Com localização no mapa</span><b>' + S.recs.filter(r => r.mapa).length + '</b><div class="bar"><i style="width:' + (t ? S.recs.filter(r => r.mapa).length / t * 100 : 0) + '%"></i></div></div>' +
+    '<div class="stat"><span>Shaft no térreo</span><b>' + S.recs.filter(r => r.shaft).length + '</b></div>' +
+    '<div class="stat"><span>Conferidos</span><b>' + cf + ' <small style="font-size:12px;color:var(--muted);font-weight:500">' + pc + '%</small></b><div class="bar"><i style="width:' + pc + '%"></i></div></div>';
+}
+function renderChips() {
+  const base = S.recs.filter((VIEWS.find(x => x[0] === S.ui.view) || VIEWS[0])[3]);
+  const cnt = {}; base.forEach(r => { cnt[tipoOf(r)] = (cnt[tipoOf(r)] || 0) + 1; });
+  const tips = Object.keys(cnt).sort(tipoSort(cnt));
+  let h = tips.map(t => '<button type="button" class="fchip' + (S.ui.tipos.includes(t) ? ' on' : '') + '" data-act="ftipo" data-t="' + esc(t) + '">' + esc(t) + ' <em>' + cnt[t] + '</em></button>').join('');
+  if (S.ui.tipos.length || S.ui.q) h += '<button type="button" class="fchip clear" data-act="clear">' + ic('x', '') + 'Limpar filtros</button>';
+  $('#chips').innerHTML = h;
+  const all = [...new Set(S.recs.map(tipoOf).filter(t => t !== 'Sem tipo'))];
+  $('#dl-tipos').innerHTML = all.map(t => '<option value="' + esc(t) + '">').join('');
+  const keys = new Set(); S.recs.forEach(r => (r.extras || []).forEach(x => x.k && keys.add(x.k)));
+  ['Síndico', 'Contato', 'Endereço', 'Nº de unidades', 'Horário de acesso'].forEach(k => keys.add(k));
+  $('#dl-keys').innerHTML = [...keys].map(k => '<option value="' + esc(k) + '">').join('');
+}
+function tipoSort(cnt) {
+  const fixed = ['Apartamento', 'Casa'];
+  return (a, b) => {
+    const ra = a === 'Sem tipo' ? 9999 : fixed.indexOf(a) >= 0 ? fixed.indexOf(a) - 10000 : -cnt[a];
+    const rb = b === 'Sem tipo' ? 9999 : fixed.indexOf(b) >= 0 ? fixed.indexOf(b) - 10000 : -cnt[b];
+    return ra - rb || a.localeCompare(b, 'pt-BR');
+  };
+}
+
+function cardHTML(r) {
+  const t = tipoOf(r), h = hueOf(t), isOpen = open.has(r.id);
+  const style = h == null ? '--h:30;--s:6%' : '--h:' + h;
+  let selos = '';
+  if (r.shaft) selos += '<span class="selo shaft">' + ic('building') + 'Shaft térreo</span>';
+  if (!r.local) selos += '<span class="selo warn">' + ic('alert') + 'Sem local.</span>';
+  if (r.obs) selos += '<span class="selo">' + ic('info') + 'Obs.</span>';
+  (r.tags || []).slice(0, 2).forEach(g => { selos += '<span class="selo tag">' + esc(g) + '</span>'; });
+  if ((r.tags || []).length > 2) selos += '<span class="selo tag">+' + (r.tags.length - 2) + '</span>';
+  let det = '';
+  const dl = [];
+  if (r.local) dl.push(['Splitter box', r.local]);
+  if (r.obs) dl.push(['Obs.', r.obs]);
+  if (r.extId) dl.push(['ID', r.extId]);
+  if (r.clientes) dl.push(['Clientes ativos', r.clientes]);
+  (r.tags || []).forEach((g, i) => { if (i >= 2) dl.push(['Tag', g]); });
+  (r.extras || []).forEach(x => dl.push([x.k, x.v]));
+  det = '<div class="xbody">' + (dl.length ? '<dl>' + dl.map(d => '<dt>' + esc(d[0]) + '</dt><dd>' + esc(d[1]) + '</dd>').join('') + '</dl>' : '') +
+    '<div class="xbtns"><button type="button" class="btn sm" data-act="edit" data-id="' + r.id + '">' + ic('pencil') + 'Editar</button></div></div>';
+  return '<article class="card' + (r.conferido ? ' done' : '') + (isOpen ? ' open' : '') + '" style="' + style + '" data-id="' + r.id + '">' +
+    '<div class="chead"><span class="tchip">' + esc(t) + '</span><button type="button" class="go" data-act="toggle" data-id="' + r.id + '" aria-label="Expandir" aria-expanded="' + isOpen + '">' + ic('chevR') + '</button></div>' +
+    (selos ? '<div class="selos">' + selos + '</div>' : '') +
+    '<div class="nome" title="' + esc(r.nome) + '">' + esc(r.nome) + '</div>' +
+    '<div class="loc' + (r.local ? '' : ' none') + '">' + ic('pin') + '<span>' + esc(r.local || 'Localização não informada') + '</span></div>' +
+    mapRow(r) +
+    '<button type="button" class="stline' + (r.conferido ? ' ok' : '') + '" data-act="conf" data-id="' + r.id + '">' + ic(r.conferido ? 'check' : 'circle') + (r.conferido ? 'Conferido' : 'Marcar como conferido') + '</button>' +
+    det + '</article>';
+}
+
+function groupKey(r) {
+  const g = S.ui.group;
+  if (g === 'origem') return r.origem === 'center' ? 'Centers e comerciais' : 'Condomínios';
+  if (g === 'conf') return r.conferido ? 'Conferidos' : 'Pendentes de conferir';
+  return tipoOf(r);
+}
+function render() {
+  document.body.classList.toggle('ro', !canEdit());
+  renderNav(); renderStats(); renderChips();
+  $('#grp').value = S.ui.group;
+  $('#title').textContent = (VIEWS.find(x => x[0] === S.ui.view) || VIEWS[0])[1];
+  const rows = visible();
+  if (!rows.length) {
+    $('#list').innerHTML = emptyHTML();
+    return;
+  }
+  const groups = {};
+  rows.forEach(r => (groups[groupKey(r)] = groups[groupKey(r)] || []).push(r));
+  const cnt = {}; Object.keys(groups).forEach(k => cnt[k] = groups[k].length);
+  const keys = Object.keys(groups).sort(S.ui.group === 'tipo' ? tipoSort(cnt) : (a, b) => a.localeCompare(b, 'pt-BR'));
+  $('#list').innerHTML = keys.map(k => {
+    const list = groups[k].sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+    const semLoc = list.filter(r => !r.local).length;
+    const byL = {}; list.forEach(r => (byL[letterOf(r)] = byL[letterOf(r)] || []).push(r));
+    const letters = Object.keys(byL).sort((a, b) => a === '#' ? 1 : b === '#' ? -1 : a.localeCompare(b));
+    const closed = S.ui.closed.includes(k);
+    const icn = S.ui.group === 'tipo' ? tipoIcon(k) : S.ui.group === 'conf' ? 'check' : 'layers';
+    const addT = S.ui.group === 'tipo' && k !== 'Sem tipo' ? k : '';
+    const addO = list[0].origem;
+    return '<section class="sec' + (closed ? ' closed' : '') + '">' +
+      '<button type="button" class="sechead" data-act="sec" data-k="' + esc(k) + '">' + ic(icn, 'big') + '<h3>' + esc(k) + '</h3><small>' + list.length + ' registros' + (semLoc ? ' · ' + semLoc + ' sem localização' : '') + '</small>' + ic('chevD', 'chev') + '</button>' +
+      '<div class="secbody"><button type="button" class="addteam" data-act="add" data-t="' + esc(addT) + '" data-o="' + addO + '">' + ic('plus') + 'Adicionar registro neste grupo</button>' +
+      letters.map(L => '<div class="row"><div class="cell"><h4>' + L + '</h4><div class="meta">' + byL[L].length + ' reg.<button type="button" class="mini" data-act="add" data-t="' + esc(addT) + '" data-o="' + addO + '" aria-label="Adicionar com a letra ' + L + '">' + ic('plus') + '</button></div></div><div class="cards">' + byL[L].map(cardHTML).join('') + '</div></div>').join('') +
+      '</div></section>';
+  }).join('');
+}
+
+/* ---------- edição ---------- */
+function xrow(k, v) {
+  return '<div class="xrow"><input class="xk" list="dl-keys" placeholder="Campo (ex.: Síndico)" value="' + esc(k) + '" aria-label="Nome do campo"><input class="xv" placeholder="Valor" value="' + esc(v) + '" aria-label="Valor do campo"><button type="button" class="mini" data-act="xdel" aria-label="Remover campo" style="width:32px;height:32px">' + ic('x') + '</button></div>';
+}
+function openForm(id, pre) {
+  if (!canEdit()) { if (id) { open.has(id) ? open.delete(id) : open.add(id); render(); } else toast('Você está em modo somente leitura.'); return; }
+  const r = id ? S.recs.find(x => x.id === id) : Object.assign({ nome: '', origem: 'cond', tipo: '', local: '', obs: '', extId: '', clientes: '', conferido: false, tags: [], extras: [], mapa: '', shaft: false }, pre || {});
+  if (!r) return;
+  $('#overlay').innerHTML =
+    '<div class="scrim" data-act="close"></div><form class="drawer" id="form" data-id="' + (id || '') + '" novalidate>' +
+    '<div class="dhead"><h2>' + (id ? 'Editar registro' : 'Novo registro') + '</h2><button type="button" class="mini" data-act="close" aria-label="Fechar" style="width:32px;height:32px">' + ic('x') + '</button></div>' +
+    '<div class="dform">' +
+    '<div class="fld"><label for="f-nome">Nome</label><input id="f-nome" required value="' + esc(r.nome) + '" placeholder="Ex.: RESIDENCIAL SOLAR DOS LUSÍADAS"></div>' +
+    '<div class="two"><div class="fld"><label for="f-origem">Origem</label><select id="f-origem"><option value="cond"' + (r.origem === 'cond' ? ' selected' : '') + '>Condomínio</option><option value="center"' + (r.origem === 'center' ? ' selected' : '') + '>Center / comercial</option></select></div>' +
+    '<div class="fld"><label for="f-tipo">Tipo</label><input id="f-tipo" list="dl-tipos" value="' + esc(r.tipo) + '" placeholder="Casa, Apartamento, Center…"></div></div>' +
+    '<div class="fld"><label for="f-local">Localização do splitter box</label><textarea id="f-local" placeholder="Ex.: Shaft térreo, CTO nos postes…">' + esc(r.local) + '</textarea></div>' +
+    '<div class="fld"><label for="f-mapa">Localização no mapa</label><input id="f-mapa" inputmode="url" autocomplete="off" value="' + esc(r.mapa) + '" placeholder="Cole o link do Google Maps (ou escreva o endereço)"><span class="hint">Ao salvar, o card ganha o botão “Abrir no mapa”. Se colocar só o endereço, abre a busca no Google Maps.</span></div>' +
+    '<label class="chk"><input type="checkbox" id="f-shaft"' + (r.shaft ? ' checked' : '') + '> Shaft no térreo</label>' +
+    '<div class="fld"><label for="f-obs">Observações</label><textarea id="f-obs">' + esc(r.obs) + '</textarea></div>' +
+    '<div class="two"><div class="fld"><label for="f-extid">ID</label><input id="f-extid" value="' + esc(r.extId) + '"></div><div class="fld"><label for="f-cli">Clientes ativos</label><input id="f-cli" inputmode="numeric" value="' + esc(r.clientes) + '"></div></div>' +
+    '<div class="fld"><label for="f-tags">Etiquetas (separe por vírgula)</label><input id="f-tags" value="' + esc((r.tags || []).join(', ')) + '" placeholder="Ex.: Precisa retirar, Prioridade"></div>' +
+    '<div><div class="lbl" style="margin-bottom:6px">Outras informações</div><div id="f-extras">' + (r.extras || []).map(x => xrow(x.k, x.v)).join('') + '</div><button type="button" class="btn sm" data-act="xadd">' + ic('plus') + 'Adicionar informação</button></div>' +
+    '<label class="chk"><input type="checkbox" id="f-conf"' + (r.conferido ? ' checked' : '') + '> Conferido</label>' +
+    '</div>' +
+    '<div class="dfoot">' + (id ? '<button type="button" class="btn danger" data-act="del" data-id="' + id + '">' + ic('trash') + 'Excluir</button>' : '') + '<span class="spacer"></span><button type="button" class="btn" data-act="close">Cancelar</button><button type="submit" class="btn primary">Salvar</button></div></form>';
+  setTimeout(() => { const f = $('#f-nome'); if (f) f.focus(); }, 30);
+}
+function closeOverlay() { $('#overlay').innerHTML = ''; }
+function submitForm(e) {
+  e.preventDefault();
+  const nome = $('#f-nome').value.trim();
+  if (!nome) { $('#f-nome').focus(); $('#f-nome').style.borderColor = 'var(--warn-fg)'; return; }
+  const id = $('#form').dataset.id;
+  const data = {
+    nome, origem: $('#f-origem').value, tipo: $('#f-tipo').value.trim(), local: $('#f-local').value.trim(), obs: $('#f-obs').value.trim(),
+    extId: $('#f-extid').value.trim(), clientes: $('#f-cli').value.trim(), conferido: $('#f-conf').checked, mapa: $('#f-mapa').value.trim(), shaft: $('#f-shaft').checked,
+    tags: $('#f-tags').value.split(',').map(s => s.trim()).filter(Boolean),
+    extras: [...document.querySelectorAll('#f-extras .xrow')].map(r => ({ k: r.querySelector('.xk').value.trim(), v: r.querySelector('.xv').value.trim() })).filter(x => x.k)
+  };
+  let rec;
+  if (id) { rec = S.recs.find(x => x.id === id); Object.assign(rec, data); }
+  else { rec = Object.assign({ id: uid() }, data); S.recs.push(rec); open.add(rec.id); }
+  persist(rec); closeOverlay(); render(); toast(id ? 'Registro atualizado' : 'Registro adicionado');
+}
+
+/* ---------- utilidades ---------- */
+let tt;
+function toast(msg, undo) {
+  clearTimeout(tt);
+  const el = $('#toast') || Object.assign(document.createElement('div'), { id: 'toast', className: 'toast' });
+  el.innerHTML = '<span>' + esc(msg) + '</span>' + (undo ? '<button type="button" data-act="undo">Desfazer</button>' : '');
+  el.setAttribute('role', 'status');
+  document.body.appendChild(el);
+  tt = setTimeout(() => el.remove(), undo ? 7000 : 2600);
+}
+function ask(msg, label, fn) {
+  const m = document.createElement('div');
+  m.innerHTML = '<div class="scrim" style="z-index:49"></div><div class="modal" role="dialog"><p>' + esc(msg) + '</p><div class="acts"><button type="button" class="btn" data-x="no">Cancelar</button><button type="button" class="btn primary" data-x="ok">' + esc(label) + '</button></div></div>';
+  document.body.appendChild(m);
+  m.addEventListener('click', e => { const x = e.target.closest('[data-x]'); if (!x && !e.target.classList.contains('scrim')) return; m.remove(); if (x && x.dataset.x === 'ok') fn(); });
+}
+async function saveFile(filename, data) {
+  try {
+    const d = (window.claude && claude.use) ? await claude.use('downloads') : null;
+    if (d) { await d.save({ filename, data }); return; }
+    const blob = new Blob([data], { type: filename.endsWith('.json') ? 'application/json' : 'text/csv;charset=utf-8' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = filename;
+    document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  } catch (e) { if (!e || e.code !== 'declined') toast('Não foi possível salvar o arquivo'); }
+}
+function exportCSV() {
+  const keys = []; S.recs.forEach(r => (r.extras || []).forEach(x => { if (!keys.includes(x.k)) keys.push(x.k); }));
+  const head = ['Nome', 'Origem', 'Tipo', 'Localização Splitter Box', 'Observações', 'ID', 'Clientes ativos', 'Conferido', 'Etiquetas', 'Link do mapa', 'Shaft no térreo'].concat(keys);
+  const q = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+  const lines = [head.map(q).join(';')].concat(S.recs.slice().sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR')).map(r =>
+    [r.nome, r.origem === 'center' ? 'Center/comercial' : 'Condomínio', r.tipo, r.local, r.obs, r.extId, r.clientes, r.conferido ? 'Sim' : 'Não', (r.tags || []).join(', '), r.mapa || '', r.shaft ? 'Sim' : 'Não']
+      .concat(keys.map(k => ((r.extras || []).find(x => x.k === k) || {}).v || '')).map(q).join(';')));
+  saveFile('condominios-fixtell.csv', '﻿' + lines.join('\r\n'));
+}
+
+/* ---------- eventos ---------- */
+let lastDel = null;
+document.addEventListener('click', e => {
+  const a = e.target.closest('[data-act]');
+  if (!a) {
+    if (e.target.closest('a.maplink')) return;
+    const card = e.target.closest('.card');
+    if (card) openForm(card.dataset.id);
+    return;
+  }
+  const act = a.dataset.act, id = a.dataset.id;
+  if (act === 'view') { S.ui.view = a.dataset.v; S.ui.tipos = []; $('#side').classList.remove('show'); save(); render(); }
+  else if (act === 'ftipo') { const t = a.dataset.t, i = S.ui.tipos.indexOf(t); i >= 0 ? S.ui.tipos.splice(i, 1) : S.ui.tipos.push(t); save(); render(); }
+  else if (act === 'clear') { S.ui.tipos = []; S.ui.q = ''; $('#q').value = ''; save(); render(); }
+  else if (act === 'sec') { const k = a.dataset.k, i = S.ui.closed.indexOf(k); i >= 0 ? S.ui.closed.splice(i, 1) : S.ui.closed.push(k); save(); render(); }
+  else if (act === 'toggle') { open.has(id) ? open.delete(id) : open.add(id); render(); }
+  else if (act === 'conf') { const r = S.recs.find(x => x.id === id); r.conferido = !r.conferido; persist(r); render(); }
+  else if (act === 'edit') openForm(id);
+  else if (act === 'addmap') { openForm(id); setTimeout(() => { const f = $('#f-mapa'); if (f) f.focus(); }, 60); }
+  else if (act === 'theme') setTheme(a.dataset.t);
+  else if (act === 'qtheme') setTheme(isDarkTheme(resolveTheme(themePref)) ? 'light' : 'dark');
+  else if (act === 'add') openForm(null, { tipo: a.dataset.t || '', origem: a.dataset.o || 'cond', shaft: S.ui.view === 'shaft' });
+  else if (act === 'close') closeOverlay();
+  else if (act === 'xadd') { $('#f-extras').insertAdjacentHTML('beforeend', xrow('', '')); const k = document.querySelectorAll('#f-extras .xk'); k[k.length - 1].focus(); }
+  else if (act === 'xdel') a.closest('.xrow').remove();
+  else if (act === 'del') {
+    ask('Excluir este registro? Você poderá desfazer logo depois.', 'Excluir', () => {
+      const i = S.recs.findIndex(x => x.id === id); lastDel = { r: S.recs[i], i }; S.recs.splice(i, 1);
+      persistDel(lastDel.r.id); closeOverlay(); render(); toast('Registro excluído', true);
+    });
+  }
+  else if (act === 'undo') { if (lastDel) { S.recs.splice(lastDel.i, 0, lastDel.r); persist(lastDel.r); lastDel = null; render(); toast('Registro restaurado'); } }
+  else if (act === 'menu') $('#side').classList.toggle('show');
+  else if (act === 'exp-csv') exportCSV();
+  else if (act === 'exp-json') saveFile('condominios-fixtell-backup.json', JSON.stringify({ versao: 1, recs: S.recs }, null, 1));
+  else if (act === 'imp') $('#file').click();
+  else if (act === 'reset') ask('Voltar aos dados originais da planilha? Isso apaga as alterações feitas' + (MODE === 'shared' ? ' para TODOS que usam esta página.' : ' aqui.'), 'Restaurar', () => { open.clear(); applyAll(JSON.parse(JSON.stringify(SEED)).map(migrate)); toast('Planilha original restaurada'); });
+});
+document.addEventListener('submit', e => { if (e.target.id === 'form') submitForm(e); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeOverlay(); });
+$('#q').addEventListener('input', e => { S.ui.q = e.target.value; render(); });
+$('#grp').addEventListener('change', e => { S.ui.group = e.target.value; save(); render(); });
+$('#file').addEventListener('change', e => {
+  const f = e.target.files[0]; e.target.value = ''; if (!f) return;
+  const rd = new FileReader();
+  rd.onload = () => {
+    try {
+      const d = JSON.parse(rd.result), arr = Array.isArray(d) ? d : d.recs;
+      if (!Array.isArray(arr) || !arr.every(r => r && typeof r.nome === 'string')) throw 0;
+      ask('Importar ' + arr.length + ' registros? Os dados atuais serão substituídos' + (MODE === 'shared' ? ' para TODOS que usam esta página' : '') + '.', 'Importar', () => {
+        applyAll(arr.map(r => Object.assign({ origem: 'cond', tipo: '', local: '', obs: '', extId: '', clientes: '', conferido: false, tags: [], extras: [] }, r, { id: r.id || uid() })).map(migrate));
+        toast('Backup importado');
+      });
+    } catch (x) { toast('Arquivo inválido. Use um backup (JSON) exportado daqui.'); }
+  };
+  rd.readAsText(f);
+});
+
+document.querySelectorAll('[data-ic]').forEach(el => { el.outerHTML = ic(el.dataset.ic); });
+document.querySelector('[data-act="menu"]').innerHTML = ic('menu');
+loadUI(); renderThemes(); applyTheme(); render(); boot();
+</script>
+
+</body></html>
